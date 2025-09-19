@@ -4,21 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cyber News</title>
-  <style>
-    :root { color-scheme: dark; }
-    body { margin:0; font-family: system-ui, sans-serif; background:#0b0f14; color:#e6edf3; }
-    header { padding:16px 20px; border-bottom:1px solid #1f2630; }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 20px; }
-    .grid { display:grid; gap:14px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-    .card { background:#111826; border:1px solid #1f2630; border-radius:12px; padding:14px; }
-    .card h3 { margin:0 0 8px; font-size:1.02rem; line-height:1.3 }
-    .meta { font-size:.82rem; opacity:.8; margin-bottom:8px }
-    .desc { font-size:.9rem; opacity:.9; }
-    .card a { display:inline-block; margin-top:10px; text-decoration:none; color:#8ab4ff }
-  </style>
-</head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
 <body>
-  <header><div class="wrap"><strong>Cyber News</strong></div></header>
+  <header>
+  <div class="wrap" style="display:flex; justify-content: space-between; align-items: center; gap:30px;">
+    <strong>Cyber News</strong>
+    <form id="search-form" method="get" action="/" style="flex:1; display:flex; justify-content:center;">
+      <input type="text" name="q" placeholder="Search..." class="search-input" value="{{ request.args.get('q','') }}">
+      <button type="submit" class="search-btn">Go</button>
+    </form>
+    <form id="lang-form" method="get">
+      <select name="lang" onchange="document.getElementById('lang-form').submit()" class="lang-select">
+        <option value="en" {% if request.args.get('lang')=='en' %}selected{% endif %}>English</option>
+        <option value="de" {% if request.args.get('lang')=='de' %}selected{% endif %}>Deutsch</option>
+        <option value="fr" {% if request.args.get('lang')=='fr' %}selected{% endif %}>Français</option>
+      </select>
+    </form>
+  </div>
+</header>
   <main class="wrap">
     <div class="grid">
       {% for a in articles %}
@@ -26,7 +30,7 @@
         <h3>{{ a.title }}</h3>
         <div class="meta">{{ a.source.name or "Unknown" }} · {{ a.publishedAt[:10] }}</div>
         <p class="desc">{{ a.description or "" }}</p>
-        <a href="{{ a.url }}" target="_blank" rel="noopener">Open</a>
+        <a href="{{ a.url }}" target="_blank" rel="noopener" onclick="fetch('/track?url={{ a.url }}')">Open</a>
       </article>
       {% endfor %}
     </div>
