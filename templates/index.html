@@ -19,6 +19,11 @@
         <option value="en" {% if request.args.get('lang')=='en' %}selected{% endif %}>English</option>
         <option value="de" {% if request.args.get('lang')=='de' %}selected{% endif %}>Deutsch</option>
         <option value="fr" {% if request.args.get('lang')=='fr' %}selected{% endif %}>Français</option>
+        <option value="it" {% if request.args.get('lang')=='it' %}selected{% endif %}>Italiano</option>
+        <option value="ar" {% if request.args.get('lang')=='ar' %}selected{% endif %}>عربي>
+        <option value="ru" {% if request.args.get('lang')=='ru' %}selected{% endif %}>русский</option>
+
+
       </select>
     </form>
   </div>
