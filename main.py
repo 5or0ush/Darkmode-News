@@ -15,7 +15,12 @@ def home():
         print(f"New session: {session['session_id']}")
     else:
         print(f"Existing session: {session['session_id']}")
-    lang = request.args.get("lang", "en")
+    lang = request.args.get("lang")
+    if lang:
+        session["lang"] = lang
+    else:
+        lang = session.get("lang", "en")
+        session["lang"] = lang
     search = request.args.get("q", "")
     if not NEWSAPI_KEY:
         abort(500)

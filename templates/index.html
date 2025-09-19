@@ -15,16 +15,15 @@
       <button type="submit" class="search-btn">Go</button>
     </form>
     <form id="lang-form" method="get">
-      <select name="lang" onchange="document.getElementById('lang-form').submit()" class="lang-select">
-        <option value="en" {% if request.args.get('lang')=='en' %}selected{% endif %}>English</option>
-        <option value="de" {% if request.args.get('lang')=='de' %}selected{% endif %}>Deutsch</option>
-        <option value="fr" {% if request.args.get('lang')=='fr' %}selected{% endif %}>Français</option>
-        <option value="it" {% if request.args.get('lang')=='it' %}selected{% endif %}>Italiano</option>
-        <option value="ar" {% if request.args.get('lang')=='ar' %}selected{% endif %}>عربي>
-        <option value="ru" {% if request.args.get('lang')=='ru' %}selected{% endif %}>русский</option>
-
-
-      </select>
+     
+      <select name="lang" onchange="this.form.submit()">
+    <option value="en" {% if session.get('lang')=='en' %}selected{% endif %}>English</option>
+    <option value="de" {% if session.get('lang')=='de' %}selected{% endif %}>Deutsch</option>
+    <option value="fr" {% if session.get('lang')=='fr' %}selected{% endif %}>Français</option>
+    <option value="ar" {% if session.get('lang')=='ar' %}selected{% endif %}>عربي></option>
+    <option value="ru" {% if session.get('lang')=='ru' %}selected{% endif %}>русский</option>
+    <option value="it" {% if session.get('lang')=='it' %}selected{% endif %}>Italiano</option>
+    </select>
     </form>
   </div>
 </header>
