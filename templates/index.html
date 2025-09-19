@@ -31,10 +31,10 @@
     <div class="grid">
       {% for a in articles %}
       <article class="card">
-        <h3>{{ a.title }}</h3>
+        
+        <h3><a href="{{ a.url }}" target="_blank" rel="noopener" onclick="fetch('/track?url={{ a.url }}')">{{ a.title }} </h3></a>
         <div class="meta">{{ a.source.name or "Unknown" }} · {{ a.publishedAt[:10] }}</div>
         <p class="desc">{{ a.description or "" }}</p>
-        <a href="{{ a.url }}" target="_blank" rel="noopener" onclick="fetch('/track?url={{ a.url }}')">Open</a>
       </article>
       {% endfor %}
     </div>
