@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cyber News</title>
   <style>
+    /* Theme toggle button */
+.toggle-btn {
+  border: 1px solid #1f2630;
+  background: transparent;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
     :root { color-scheme: dark; }
     body { margin:0; font-family: system-ui, sans-serif; background:#0b0f14; color:#e6edf3; }
     header { padding:16px 20px; border-bottom:1px solid #1f2630; }
@@ -17,8 +27,17 @@
     .card a { display:inline-block; margin-top:10px; text-decoration:none; color:#8ab4ff }
   </style>
 </head>
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 <body>
   <header><div class="wrap"><strong>Cyber News</strong></div></header>
+  <header>
+  <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+    <strong>Cyber News</strong>
+    <!-- THEME TOGGLE BUTTON -->
+    <button id="themeToggle" class="toggle-btn" type="button" aria-label="Toggle theme">🌙 Dark</button>
+  </div>
+</header>
+
   <main class="wrap">
     <div class="grid">
       {% for a in articles %}
