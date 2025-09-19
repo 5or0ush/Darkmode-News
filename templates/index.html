@@ -20,7 +20,7 @@
     <option value="en" {% if session.get('lang')=='en' %}selected{% endif %}>English</option>
     <option value="de" {% if session.get('lang')=='de' %}selected{% endif %}>Deutsch</option>
     <option value="fr" {% if session.get('lang')=='fr' %}selected{% endif %}>Français</option>
-    <option value="ar" {% if session.get('lang')=='ar' %}selected{% endif %}>عربي></option>
+    <option value="ar" {% if session.get('lang')=='ar' %}selected{% endif %}>عربي</option>
     <option value="ru" {% if session.get('lang')=='ru' %}selected{% endif %}>русский</option>
     <option value="it" {% if session.get('lang')=='it' %}selected{% endif %}>Italiano</option>
     </select>
@@ -32,13 +32,38 @@
       {% for a in articles %}
       <article class="card">
         
-        <h3><a href="{{ a.url }}" target="_blank" rel="noopener" onclick="fetch('/track?url={{ a.url }}')">{{ a.title }} </h3></a>
+        <h3>
+          <a href="{{ a.url }}" target="_blank" rel="noopener"
+            onclick="fetch('/track?url={{ a.url | urlencode }}&title={{ a.title | urlencode }}&description={{ a.description | urlencode }}&source={{ a.source.name | urlencode }}&publishedAt={{ a.publishedAt | urlencode }}')">
+            {{ a.title }}
+          </a>
+        </h3>
         <div class="meta">{{ a.source.name or "Unknown" }} · {{ a.publishedAt[:10] }}</div>
         <p class="desc">{{ a.description or "" }}</p>
       </article>
       {% endfor %}
     </div>
     {% if not articles %}
+      <p>No articles. Check API key or quota.</p>
+    {% endif %}
+  </main>
+  <div class="wrap" style="display:flex; justify-content: space-between; align-items: center; gap:30px;">
+    <h2>Most viewed articles</h2>
+  </div>
+
+  <main class="wrap">
+    <div class="grid">
+      
+      {% for i in most_visited %}
+      <article class="card">
+        
+        <h3><a href="{{ i.url }}" target="_blank" rel="noopener" onclick="fetch('/track?url={{ i.url }}')">{{ i.title }} </h3></a>
+        <div class="meta">{{ i.source or "Unknown" }} · {{ i.publishedAt[:10] }} · ({{ i.count }} visits)</div>
+        <p class="desc">{{ i.description or "" }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% if not most_visited %}
       <p>No articles. Check API key or quota.</p>
     {% endif %}
   </main>

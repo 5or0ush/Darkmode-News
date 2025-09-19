@@ -8,6 +8,8 @@ app.secret_key = os.urandom(24)
 NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
 
 
+
+
 @app.route("/")
 def home():
     if "session_id" not in session:
@@ -27,30 +29,63 @@ def home():
     r = requests.get(
         "https://newsapi.org/v2/everything",
         params={
-            "q": f"{search} cybersecurity OR security OR breach",
+            "q": f"{search} cybersecurity OR security OR hacker OR cyberattack",
             "language": lang,
             "sortBy": "publishedAt",
-            "pageSize": 16,
+            "pageSize": 12,
         },
         headers={"X-Api-Key": NEWSAPI_KEY},
         timeout=10,
     )
     data = r.json()
     articles = data.get("articles", [])
-    return render_template("index.html", articles=articles)
+    with open("resources/visits.json", "r") as f:
+        visits = json.load(f)
+    top_sites = sorted(visits.items(), key=lambda x: x[1]["count"], reverse=True)[:6]
+
+    most_visited = []
+    for url, data in top_sites:
+        most_visited.append({
+            "url": url,
+            "count": data["count"],
+            "source": data.get("source", "Unknown"),
+            "title": data.get("title", url),
+            "description": data.get("description", ""),
+            "publishedAt": data.get("publishedAt", "")
+        })
+    return render_template("index.html", articles=articles, most_visited=most_visited)
+
+
 
 @app.route("/track")
 def track():
     url = request.args.get("url")
+    title = request.args.get("title")
+    description = request.args.get("description")
+    source = request.args.get("source")
+    publishedAt = request.args.get("publishedAt")
+
     try:
         with open("resources/visits.json", "r") as f:
             data = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         data = {}
 
-    data[url] = data.get(url, 0) + 1
+    if url in data:
+        data[url]["count"] += 1
+    else:
+        # new entry with metadata
+        data[url] = {
+            "count": 1,
+            "title": title or url,
+            "description": description or "",
+            "source": source or "Unknown",
+            "publishedAt": publishedAt or ""
+        }
+
     with open("resources/visits.json", "w") as f:
         json.dump(data, f, indent=4)
+
     print(f"Tracked click: {url}")
     return "", 204
 
