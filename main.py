@@ -5,8 +5,8 @@ import json
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  
 
-#NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
-NEWSAPI_KEY = "4fe81e4f1271429ea9eed6280388923c"
+NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
+
 
 @app.route("/")
 def home():
