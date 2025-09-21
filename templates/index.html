@@ -16,7 +16,7 @@
     </form>
     <form id="lang-form" method="get">
      
-      <select name="lang" onchange="this.form.submit()">
+      <select class="lang-select" name="lang" onchange="this.form.submit()">
     <option value="en" {% if session.get('lang')=='en' %}selected{% endif %}>English</option>
     <option value="de" {% if session.get('lang')=='de' %}selected{% endif %}>Deutsch</option>
     <option value="fr" {% if session.get('lang')=='fr' %}selected{% endif %}>Français</option>
@@ -31,14 +31,21 @@
     <div class="grid">
       {% for a in articles %}
       <article class="card">
-        
+        {% if a.urlToImage %}
+          <img class="thumb" src="{{ a.urlToImage }}" alt="" loading="lazy" onerror="this.style.display='none'">
+        {% else %}
+          <div class="thumb"></div>
+        {% endif %}
         <h3>
           <a href="{{ a.url }}" target="_blank" rel="noopener"
-            onclick="fetch('/track?url={{ a.url | urlencode }}&title={{ a.title | urlencode }}&description={{ a.description | urlencode }}&source={{ a.source.name | urlencode }}&publishedAt={{ a.publishedAt | urlencode }}')">
+             onclick="fetch('/track?url={{ a.url | urlencode }}&title={{ (a.title or '') | urlencode }}&description={{ (a.description or '') | urlencode }}&source={{ (a.source.name or 'Unknown') | urlencode }}&publishedAt={{ (a.publishedAt or '') | urlencode }}')">
             {{ a.title }}
           </a>
         </h3>
-        <div class="meta">{{ a.source.name or "Unknown" }} · {{ a.publishedAt[:10] }}</div>
+        <div class="meta">
+          <span class="badge">{{ a.source.name or "Unknown" }}</span>
+          <span class="badge">{{ (a.publishedAt or "")[:10] }}</span>
+        </div>
         <p class="desc">{{ a.description or "" }}</p>
       </article>
       {% endfor %}
@@ -56,9 +63,16 @@
       
       {% for i in most_visited %}
       <article class="card">
-        
-        <h3><a href="{{ i.url }}" target="_blank" rel="noopener" onclick="fetch('/track?url={{ i.url }}')">{{ i.title }} </h3></a>
-        <div class="meta">{{ i.source or "Unknown" }} · {{ i.publishedAt[:10] }} · ({{ i.count }} visits)</div>
+        <h3>
+          <a href="{{ i.url }}" target="_blank" rel="noopener" onclick="fetch('/track?url={{ i.url }}')">
+            {{ i.title }}
+          </a>
+        </h3>
+        <div class="meta">
+          <span class="badge">{{ i.source or "Unknown" }}</span>
+          {% if i.publishedAt %}<span class="badge">{{ i.publishedAt[:10] }}</span>{% endif %}
+          {% if i.count is not none %}<span class="badge">{{ i.count }} visits</span>{% endif %}
+        </div>
         <p class="desc">{{ i.description or "" }}</p>
       </article>
       {% endfor %}
